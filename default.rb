@@ -19,6 +19,7 @@ gsub_file 'Gemfile', "# gem 'therubyracer'", "gem 'therubyracer'"
 ['Bundle edge', 'gem', 'To use', 'Deploy', 'Use'].each do |regexp|
   gsub_file 'Gemfile', /^#\s#{regexp}.*\n?$/, ''
 end
+gsub_file 'Gemfile', /\n{3,}/, "\n"
 # add usable gems
 gem_group :development do
   gem "letter_opener"
