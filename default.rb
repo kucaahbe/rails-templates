@@ -1,6 +1,5 @@
 # TODO:
-# html5boilerplate
-# haml
+# haml as default template engine for generators
 # rspec
 # cucumber
 
@@ -30,3 +29,24 @@ end
 environment(nil, :env => "development") do
   "config.assets.logger = false"
 end
+
+if yes? 'setup html5-rails?'
+  gem_group :assets do
+    gem 'compass-rails'
+    gem 'compass-h5bp'
+  end
+  gem 'haml-rails'
+  gem 'jquery-rails'
+  gem 'html5-rails'
+
+  run 'bundle'
+
+  generate 'html5:install'
+
+  environment(nil, :env => "production") do
+    'config.assets.precompile += %w( polyfills.js )'
+  end
+end
+
+git :init
+git add: '.'
