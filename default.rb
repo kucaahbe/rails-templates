@@ -49,5 +49,8 @@ if yes? 'setup html5-rails?'
   end
 end
 
+# copying sample yaml stuff
+run "cp config/*.yml config/examples/"
+
 git :init
 git add: '.'
