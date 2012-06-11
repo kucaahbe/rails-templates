@@ -26,6 +26,11 @@ gem_group :development do
   gem "thin"
 end
 
+# letter opener default delivery method
+environment(nil, :env => "development") do
+  "config.action_mailer.delivery_method = :letter_opener"
+end
+
 # turn off assets logging
 environment(nil, :env => "development") do
   "config.assets.logger = false"
