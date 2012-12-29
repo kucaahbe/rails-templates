@@ -17,20 +17,39 @@ module RT
         @@initializers.merge! opts[:initializer]||{}
       end
 
-      def gems
-        @@gems
-      end
+      def load_all template
+        @@gems.each do |gem_grp,gems|
+          if gem_grp==:default
+            gems.each { |g| template.gem g }
+          else
+            template.gem_group gem_grp do
+              begin
+                gems.each { |g| template.gem g }
+              rescue NoMethodError
+                # in case of gems is String
+                template.gem gems
+              end
+            end
+          end
+        end
 
-      def envs
-        @@envs
-      end
+        @@envs.each do |env,value|
+          if env==:all
+            template.application value
+          else
+            template.application(nil, :env => env) { value }
+          end
+        end
 
-      def generators
-        @@generators
-      end
+        template.run 'bundle'
 
-      def initializers
-        @@initializers
+        @@generators.each do |generator|
+          template.generate *generator
+        end
+
+        @@initializers.each do |initializer_name,content|
+          template.initializer "#{initializer_name}.rb", content
+        end
       end
 
     end

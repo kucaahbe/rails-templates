@@ -31,7 +31,7 @@ RT::Feature.add(
   envs: { development: "config.action_mailer.delivery_method = :letter_opener" }
 )
 RT::Feature.add(
-  gems: { development: 'fabrication'},
+  gems: { test: 'fabrication'},
   initializer: {
     fabrication: <<-I
 if defined? Fabrication
@@ -59,38 +59,7 @@ end
 
 # === Actual setup:
 
-RT::Feature.gems.each do |gem_grp,gems|
-  if gem_grp==:default
-    gems.each { |g| gem g }
-  else
-    gem_group gem_grp do
-      begin
-        gems.each { |g| gem g }
-      rescue NoMethodError
-        # in case of gems is String
-        gem gems
-      end
-    end
-  end
-end
-
-RT::Feature.envs.each do |env,value|
-  if env==:all
-    application value
-  else
-    application(nil, :env => env) { value }
-  end
-end
-
-run 'bundle'
-
-RT::Feature.generators.each do |generator|
-  generate *generator
-end
-
-RT::Feature.initializers.each do |initializer_name,content|
-  initializer "#{initializer_name}.rb", content
-end
+RT::Feature.load_all self
 
 # config/examples:
 create_file 'config/examples/.gitkeep'
