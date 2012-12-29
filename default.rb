@@ -12,9 +12,10 @@ append_to_file '.gitignore' do
 /config/*.yml
   IGN
 end
+# remove therubyracer:
+gsub_file 'Gemfile', %r{^.+sstephenson.+$}, ''
+gsub_file 'Gemfile', %r{^.+# gem 'therubyracer'.+$}, ''
 
-# uncomment therubyracer:
-gsub_file 'Gemfile', "# gem 'therubyracer'", "gem 'therubyracer'"
 # remove unused comments in a Gemfile
 ['Bundle edge', 'gem', 'To use', 'Deploy', 'Use'].each do |regexp|
   gsub_file 'Gemfile', /^#\s#{regexp}.*\n?$/, ''
