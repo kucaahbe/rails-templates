@@ -37,5 +37,8 @@ append_to_file '.gitignore', <<-IGN
 IGN
 run "cp config/*.yml config/examples/"
 
+rake 'db:create:all'
+rake 'db:migrate'
+
 git :init
 git add: '.'
