@@ -20,6 +20,15 @@ gsub_file 'Gemfile', /\n{3,}/, "\n"
 application(nil, :env => "development") do
   "config.assets.logger = false"
 end
+# setup generators
+application(nil, :env => "development") do
+<<G
+config.generators do |g|
+    g.helper = false
+    g.assets = false
+  end
+G
+end
 
 # == Useful stuff:
 RT::Feature.load_all $LOAD_PATH.first, self
