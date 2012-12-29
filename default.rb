@@ -21,13 +21,30 @@ application(nil, :env => "development") do
   "config.assets.logger = false"
 end
 
-# add useful gems
+# == Useful stuff:
+
+RT::Dependency.add(
+  gems: { development: 'thin'}
+)
 RT::Dependency.add(
   gems: { development: 'letter_opener'},
   envs: { development: "config.action_mailer.delivery_method = :letter_opener" }
 )
 RT::Dependency.add(
-  gems: { development: 'thin'}
+  gems: { development: 'fabrication'},
+  initializer: {
+    fabrication: <<-I
+if defined? Fabrication
+
+Fabrication.configure do |config|
+  config.fabricator_path = 'fabricators'
+  config.path_prefix = Rails.root
+  config.sequence_start = 10000
+end
+
+end
+I
+  }
 )
 if yes? 'setup html5-rails?'
   RT::Dependency.add(
@@ -69,6 +86,10 @@ run 'bundle'
 
 RT::Dependency.generators.each do |generator|
   generate *generator
+end
+
+RT::Dependency.initializers.each do |initializer_name,content|
+  initializer "#{initializer_name}.rb", content
 end
 
 # config/examples:

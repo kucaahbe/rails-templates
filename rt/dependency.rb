@@ -2,6 +2,7 @@ module RT
   module Dependency
     @@gems={}
     @@envs={}
+    @@initializers={}
     @@generators=[]
 
     class <<self
@@ -12,6 +13,8 @@ module RT
         @@envs.merge!(opts[:envs]||{}) { |key, v1, v2| v1+"\n"+v2 }
 
         @@generators << opts[:generator] if opts[:generator]
+
+        @@initializers.merge! opts[:initializer]||{}
       end
 
       def gems
@@ -24,6 +27,10 @@ module RT
 
       def generators
         @@generators
+      end
+
+      def initializers
+        @@initializers
       end
 
     end
