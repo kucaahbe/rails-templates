@@ -1,3 +1,7 @@
+$LOAD_PATH.unshift File.dirname(__FILE__)
+
+require 'rt/dependency'
+
 # common clean up tasks:
 remove_file 'vendor/plugins'
 remove_file 'README'
@@ -12,36 +16,59 @@ gsub_file 'Gemfile', %r{^.+# gem 'therubyracer'.+$}, ''
 # remove annoying empty lines
 gsub_file 'Gemfile', /\n{3,}/, "\n"
 
-# add useful gems
-gem_group :development do
-  gem "letter_opener"
-  gem "thin"
-end
-
-# letter opener default delivery method
-application(nil, :env => "development") do
-  "config.action_mailer.delivery_method = :letter_opener"
-end
-
 # turn off assets logging
 application(nil, :env => "development") do
   "config.assets.logger = false"
 end
 
+# add useful gems
+RT::Dependency.add(
+  gems: { development: 'letter_opener'},
+  envs: { development: "config.action_mailer.delivery_method = :letter_opener" }
+)
+RT::Dependency.add(
+  gems: { development: 'thin'}
+)
 if yes? 'setup html5-rails?'
-  gem_group :assets do
-    gem 'compass-rails'
-    gem 'compass-h5bp'
+  RT::Dependency.add(
+    gems: {
+      default: ['html5-rails'],
+      assets: ['compass-rails','compass-h5bp']
+    },
+    generator: 'html5:install',
+    envs: { all: 'config.assets.precompile += %w( polyfills.js )' }
+  )
+end
+
+# === Actual setup:
+
+RT::Dependency.gems.each do |gem_grp,gems|
+  if gem_grp==:default
+    gems.each { |g| gem g }
+  else
+    gem_group gem_grp do
+      begin
+        gems.each { |g| gem g }
+      rescue NoMethodError
+        # in case of gems is String
+        gem gems
+      end
+    end
   end
-  gem 'haml-rails'
-  gem 'jquery-rails'
-  gem 'html5-rails'
+end
 
-  run 'bundle'
+RT::Dependency.envs.each do |env,value|
+  if env==:all
+    application value
+  else
+    application(nil, :env => env) { value }
+  end
+end
 
-  generate 'html5:install'
+run 'bundle'
 
-  application 'config.assets.precompile += %w( polyfills.js )'
+RT::Dependency.generators.each do |generator|
+  generate *generator
 end
 
 # config/examples:
