@@ -1,8 +1,3 @@
-# TODO:
-# haml as default template engine for generators
-# rspec
-# cucumber
-
 # common clean up tasks:
 remove_file 'vendor/plugins'
 remove_file 'README'
