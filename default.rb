@@ -23,14 +23,14 @@ end
 
 # == Useful stuff:
 
-RT::Dependency.add(
+RT::Feature.add(
   gems: { development: 'thin'}
 )
-RT::Dependency.add(
+RT::Feature.add(
   gems: { development: 'letter_opener'},
   envs: { development: "config.action_mailer.delivery_method = :letter_opener" }
 )
-RT::Dependency.add(
+RT::Feature.add(
   gems: { development: 'fabrication'},
   initializer: {
     fabrication: <<-I
@@ -47,7 +47,7 @@ I
   }
 )
 if yes? 'setup html5-rails?'
-  RT::Dependency.add(
+  RT::Feature.add(
     gems: {
       default: ['html5-rails'],
       assets: ['compass-rails','compass-h5bp']
@@ -59,7 +59,7 @@ end
 
 # === Actual setup:
 
-RT::Dependency.gems.each do |gem_grp,gems|
+RT::Feature.gems.each do |gem_grp,gems|
   if gem_grp==:default
     gems.each { |g| gem g }
   else
@@ -74,7 +74,7 @@ RT::Dependency.gems.each do |gem_grp,gems|
   end
 end
 
-RT::Dependency.envs.each do |env,value|
+RT::Feature.envs.each do |env,value|
   if env==:all
     application value
   else
@@ -84,11 +84,11 @@ end
 
 run 'bundle'
 
-RT::Dependency.generators.each do |generator|
+RT::Feature.generators.each do |generator|
   generate *generator
 end
 
-RT::Dependency.initializers.each do |initializer_name,content|
+RT::Feature.initializers.each do |initializer_name,content|
   initializer "#{initializer_name}.rb", content
 end
 

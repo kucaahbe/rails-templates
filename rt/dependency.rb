@@ -1,5 +1,5 @@
 module RT
-  module Dependency
+  module Feature
     @@gems={}
     @@envs={}
     @@initializers={}
