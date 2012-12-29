@@ -1,0 +1,4 @@
+gems:
+  development: letter_opener
+envs:
+  development: config.action_mailer.delivery_method = :letter_opener

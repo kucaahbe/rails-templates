@@ -1,0 +1,7 @@
+ask: setup html5-rails?
+gems:
+  default: [html5-rails]
+  assets:  [compass-rails,compass-h5bp]
+generator: html5:install
+envs:
+  all: config.assets.precompile += %w( polyfills.js )

@@ -22,44 +22,11 @@ application(nil, :env => "development") do
 end
 
 # == Useful stuff:
-
-RT::Feature.add(
-  gems: { development: 'thin'}
-)
-RT::Feature.add(
-  gems: { development: 'letter_opener'},
-  envs: { development: "config.action_mailer.delivery_method = :letter_opener" }
-)
-RT::Feature.add(
-  gems: { test: 'fabrication'},
-  initializer: {
-    fabrication: <<-I
-if defined? Fabrication
-
-Fabrication.configure do |config|
-  config.fabricator_path = 'fabricators'
-  config.path_prefix = Rails.root
-  config.sequence_start = 10000
-end
-
-end
-I
-  }
-)
-if yes? 'setup html5-rails?'
-  RT::Feature.add(
-    gems: {
-      default: ['html5-rails'],
-      assets: ['compass-rails','compass-h5bp']
-    },
-    generator: 'html5:install',
-    envs: { all: 'config.assets.precompile += %w( polyfills.js )' }
-  )
-end
+RT::Feature.load_all $LOAD_PATH.first, self
 
 # === Actual setup:
 
-RT::Feature.load_all self
+RT::Feature.invoke_all self
 
 # config/examples:
 create_file 'config/examples/.gitkeep'
