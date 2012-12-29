@@ -3,37 +3,33 @@
 # rspec
 # cucumber
 
+# common clean up tasks:
 remove_file 'vendor/plugins'
-create_file 'config/examples/.gitkeep'
-append_to_file '.gitignore' do
-  <<-IGN
+remove_file 'README'
+remove_file 'README.rdoc'
 
-# ignore config files.
-/config/*.yml
-  IGN
-end
 # remove therubyracer:
 gsub_file 'Gemfile', %r{^.+sstephenson.+$}, ''
 gsub_file 'Gemfile', %r{^.+# gem 'therubyracer'.+$}, ''
 
-# remove unused comments in a Gemfile
-['Bundle edge', 'gem', 'To use', 'Deploy', 'Use'].each do |regexp|
-  gsub_file 'Gemfile', /^#\s#{regexp}.*\n?$/, ''
-end
+# remove useless comments in a Gemfile
+['Bundle edge', 'gem', 'To use', 'Deploy', 'Use'].each { |regexp| gsub_file 'Gemfile', /^#\s#{regexp}.*\n?$/, '' }
+# remove annoying empty lines
 gsub_file 'Gemfile', /\n{3,}/, "\n"
-# add usable gems
+
+# add useful gems
 gem_group :development do
   gem "letter_opener"
   gem "thin"
 end
 
 # letter opener default delivery method
-environment(nil, :env => "development") do
+application(nil, :env => "development") do
   "config.action_mailer.delivery_method = :letter_opener"
 end
 
 # turn off assets logging
-environment(nil, :env => "development") do
+application(nil, :env => "development") do
   "config.assets.logger = false"
 end
 
@@ -50,12 +46,16 @@ if yes? 'setup html5-rails?'
 
   generate 'html5:install'
 
-  environment(nil, :env => "production") do
-    'config.assets.precompile += %w( polyfills.js )'
-  end
+  application 'config.assets.precompile += %w( polyfills.js )'
 end
 
-# copying sample yaml stuff
+# config/examples:
+create_file 'config/examples/.gitkeep'
+append_to_file '.gitignore', <<-IGN
+
+# ignore config files.
+/config/*.yml
+IGN
 run "cp config/*.yml config/examples/"
 
 git :init
