@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
-require 'rt/dependency'
+require 'rt/feature'
 
 # common clean up tasks:
 remove_file 'vendor/plugins'
