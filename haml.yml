@@ -1,0 +1,3 @@
+ask: setup haml?
+gems:
+ default: ['haml-rails']
