@@ -1,0 +1,4 @@
+ask: setup twitter bootstrap?
+gems:
+  default: [twitter-bootstrap-rails]
+generator: bootstrap:install static
