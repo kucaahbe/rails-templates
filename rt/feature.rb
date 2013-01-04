@@ -33,14 +33,16 @@ module RT
       def invoke_all template
         @@gems.each do |gem_grp,gems|
           if gem_grp=='default'
-            gems.each { |g| template.gem g }
+            gems.each { |g| Feature.install_gem template, g }
           else
             template.gem_group gem_grp do
               begin
-                gems.each { |g| template.gem g }
+                gems.each do |g|
+                  Feature.install_gem template, g
+                end
               rescue NoMethodError
                 # in case of gems is String
-                template.gem gems
+                Feature.install_gem template, gems
               end
             end
           end
@@ -63,6 +65,28 @@ module RT
         @@initializers.each do |initializer_name,content|
           template.initializer "#{initializer_name}.rb", content
         end
+      end
+
+      def install_gem template, gem
+        case gem
+        when Array
+          raise "wrong parameters to install_gem: #{gem.inspect}"
+        when Hash
+          name = gem.delete(:name)
+          args = [ name, gem ]
+        when String
+          args = gem
+        end
+
+        puts "gem #{args.inspect}" if debug?
+
+        template.gem *args
+      end
+
+      protected
+
+      def debug?
+        @debug ||= ENV.has_key? 'DEBUG'
       end
 
     end

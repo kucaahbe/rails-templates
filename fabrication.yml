@@ -1,5 +1,7 @@
 gems:
- test: 'fabrication'
+ test:
+ - :name: fabrication
+   :group: development
 initializer:
   fabrication: |
     if defined? Fabrication

@@ -26,6 +26,7 @@ application(nil, :env => "development") do
 config.generators do |g|
     g.helper = false
     g.assets = false
+    g.fixture_replacement :fabrication, dir: 'fabricators'
   end
 G
 end
