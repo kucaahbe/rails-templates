@@ -1,0 +1,4 @@
+ask: setup cucumber?
+gems:
+  test: [cucumber-rails, database_cleaner]
+generator: cucumber:install
