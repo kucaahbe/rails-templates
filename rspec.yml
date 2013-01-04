@@ -1,0 +1,5 @@
+ask: setup rspec?
+gems:
+  development: [rspec-rails]
+  test:        [rspec-rails]
+generator: rspec:install
