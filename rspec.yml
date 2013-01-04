@@ -1,5 +1,7 @@
 ask: setup rspec?
 gems:
-  development: [rspec-rails]
-  test:        [rspec-rails]
+  test:
+  - :name: rspec-rails
+    :group: development
+    :version: ~> 2.4
 generator: rspec:install
