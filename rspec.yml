@@ -1,7 +1,8 @@
-ask: setup rspec?
+ask: setup rspec(shoulda matchers included)?
 gems:
   test:
   - :name: rspec-rails
     :group: development
     :version: ~> 2.4
+  - :name: shoulda-matchers
 generator: rspec:install
